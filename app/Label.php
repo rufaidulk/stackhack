@@ -14,4 +14,15 @@ class Label extends Model
     protected $fillable = [
         'name', 'user_id'
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+   
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

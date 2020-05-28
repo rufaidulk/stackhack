@@ -57,4 +57,15 @@ class Task extends Model
             throw $e;
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+    
+    public function label()
+    {
+        return $this->belongsTo(Label::class);
+    }
 }

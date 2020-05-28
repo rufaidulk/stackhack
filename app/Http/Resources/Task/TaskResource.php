@@ -17,7 +17,7 @@ class TaskResource extends JsonResource
         return [
             'id'         => $this->id,
             'subject'    => $this->subject,
-            'label'      => $this->label,
+            'label'      => $this->label->name,
             'due_date'   => $this->due_date,
             'status'     => config('params.task.status')[$this->status],
             'created_at' => date('Y-m-d H:i:s', strtotime($this->created_at)),
