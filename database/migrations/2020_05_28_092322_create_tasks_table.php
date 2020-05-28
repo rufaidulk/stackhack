@@ -21,6 +21,7 @@ class CreateTasksTable extends Migration
             $table->bigInteger('label_id')->nullable();
             $table->tinyInteger('status');
             $table->timestamps();
+            $table->softDeletes('deleted_at', 0);
         });
     }
 

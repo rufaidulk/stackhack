@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::fallback(function() {
+    return response()->json([
+        'status' => Response::HTTP_NOT_FOUND,
+        'message' => Response::$statusTexts[Response::HTTP_NOT_FOUND],
+        'errors' => 'Page not found'
+    ], Response::HTTP_NOT_FOUND);
 });
 
 Route::prefix('auth')->group(function () {

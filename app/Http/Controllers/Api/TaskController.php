@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\TaskRequest;
+use App\Http\Resources\Task\TaskCollection;
+use App\Http\Resources\Task\TaskResource;
 use App\Task;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,6 +24,7 @@ class TaskController extends ApiBaseController
         $this->middleware(['auth:api']);
         $this->task = $task;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +32,9 @@ class TaskController extends ApiBaseController
      */
     public function index()
     {
-        //
+        $response['data'] =  (new TaskCollection(Task::paginate()))->response()->getData(true);
+
+        return $this->success($response, 'Tasks List', Response::HTTP_OK);
     }
 
     /**
@@ -43,12 +48,14 @@ class TaskController extends ApiBaseController
         try{       
             $this->task->createModel($request->validated());
         }
-        catch (Exception $e) {throw $e;
+        catch (Exception $e) {
             logger($e);
             return $this->error('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+        
+        $response['data'] = new TaskResource($this->task);
 
-        return $this->success(['data' => []], 'New task created', Response::HTTP_CREATED);
+        return $this->success($response, 'New task created', Response::HTTP_CREATED);
     }
 
     /**
@@ -59,7 +66,9 @@ class TaskController extends ApiBaseController
      */
     public function show(Task $task)
     {
-        //
+        $response['data'] = new TaskResource($task);
+
+        return $this->success($response, 'Task details', Response::HTTP_OK);   
     }
 
     /**
@@ -69,9 +78,19 @@ class TaskController extends ApiBaseController
      * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
-        //
+        try{       
+            $task->updateModel($request->validated());
+        }
+        catch (Exception $e) {throw $e;
+            logger($e);
+            return $this->error('', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        
+        $response['data'] = new TaskResource($task);
+
+        return $this->success($response, 'Task updated', Response::HTTP_OK);
     }
 
     /**
@@ -82,6 +101,7 @@ class TaskController extends ApiBaseController
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return $this->success(['data' => []], 'Task deleted', Response::HTTP_OK);
     }
 }

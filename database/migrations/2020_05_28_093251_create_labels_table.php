@@ -18,6 +18,7 @@ class CreateLabelsTable extends Migration
             $table->bigInteger('user_id');
             $table->string('name')->collation('utf8_general_ci');
             $table->timestamps();
+            $table->softDeletes('deleted_at', 0);
             $table->unique(['user_id', 'name']);
         });
     }

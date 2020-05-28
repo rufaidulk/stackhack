@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Api;
 
+use Illuminate\Validation\Rule;
+
 class TaskRequest extends ApiBaseRequest
 {
     /**
@@ -45,14 +47,14 @@ class TaskRequest extends ApiBaseRequest
      */
     private function updateRules()
     {
-        // return [
-        //     'name' => [
-        //         'required',
-        //         'string', 'max:255',
-        //         Rule::unique('companies')->ignore($this->route('company')),
-        //     ],
-        //     'description' => 'required|string|max:255',
-        //     'user_id' => 'required|exists:users,id'
-        // ];
+        return [
+            'subject' => 'required|string|max:255',
+            'due_date' => 'sometimes|date',
+            'label_id' => 'sometimes|exists:labels,id',
+            'status' => [
+                'sometimes',
+                Rule::in(array_keys(config('params.task.status')))
+            ],
+        ];
     }
 }
