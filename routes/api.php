@@ -33,3 +33,4 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::apiResource('tasks', 'Api\TaskController');
+Route::apiResource('labels', 'Api\LabelController');

@@ -83,7 +83,7 @@ class TaskController extends ApiBaseController
         try{       
             $task->updateModel($request->validated());
         }
-        catch (Exception $e) {throw $e;
+        catch (Exception $e) {
             logger($e);
             return $this->error('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
